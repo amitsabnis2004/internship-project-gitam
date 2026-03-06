@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Helpdesk Chatbot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">AI Student Helpdesk</p>
+      <h1>Ask Campus Questions in Natural Language</h1>
+      <p class="subtext">Admissions, fees, exams, attendance, placements, and academics. If confidence is low, your query is escalated to staff.</p>
+      <a class="admin-link" href="/admin-portal">Open Admin Dashboard</a>
+    </section>
+
+    <section class="chat-card">
+      <div id="chatWindow" class="chat-window"></div>
+
+      <form id="chatForm" class="chat-form">
+        <input id="messageInput" type="text" placeholder="Example: When is the exam timetable released?" required />
+        <button type="submit">Send</button>
+      </form>
+
+      <p id="status" class="status"></p>
+    </section>
+  </main>
+
+  <script src="/static/js/chat.js"></script>
+</body>
+</html>

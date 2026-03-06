@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Student Helpdesk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+  <main class="page-shell admin-shell">
+    <section class="hero">
+      <p class="eyebrow">Admin Dashboard</p>
+      <h1>Knowledge Base and Escalations</h1>
+      <p class="subtext">Manage FAQs, monitor unresolved queries, and track usage analytics.</p>
+      <a class="admin-link" href="/">Back to Student Portal</a>
+    </section>
+
+    <section class="panel-grid">
+      <article class="panel">
+        <h2>Analytics Summary</h2>
+        <pre id="analyticsBox" class="mono-box">Loading...</pre>
+      </article>
+
+      <article class="panel">
+        <h2>Add FAQ</h2>
+        <form id="faqForm" class="stack-form">
+          <input id="faqIntent" type="text" placeholder="Intent (e.g., Fees)" required />
+          <textarea id="faqQuestion" placeholder="Question" required></textarea>
+          <textarea id="faqAnswer" placeholder="Answer" required></textarea>
+          <button type="submit">Add FAQ</button>
+        </form>
+      </article>
+
+      <article class="panel">
+        <h2>FAQs</h2>
+        <div id="faqList" class="list-box"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Unresolved Escalations</h2>
+        <div id="unresolvedList" class="list-box"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

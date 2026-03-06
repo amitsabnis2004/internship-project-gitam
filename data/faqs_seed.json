@@ -1,0 +1,37 @@
+[
+  {
+    "intent": "Admissions",
+    "question": "What is the admission process for first year students?",
+    "answer": "Admissions are handled through the university admissions portal. Complete registration, upload documents, and pay the application fee before the deadline."
+  },
+  {
+    "intent": "Fees",
+    "question": "How can I pay my semester fees?",
+    "answer": "Semester fees can be paid through the student ERP portal using net banking, UPI, or card payment."
+  },
+  {
+    "intent": "Examinations",
+    "question": "When will the exam timetable be released?",
+    "answer": "The exam timetable is usually published at least two weeks before the examination start date."
+  },
+  {
+    "intent": "Attendance",
+    "question": "What is the minimum attendance required to appear for exams?",
+    "answer": "Students must maintain at least 75% attendance in each course unless exceptions are approved by the academic office."
+  },
+  {
+    "intent": "Placements",
+    "question": "How do I register for campus placements?",
+    "answer": "You can register for placements through the placement portal after profile verification by the Training and Placement Cell."
+  },
+  {
+    "intent": "Academics",
+    "question": "Where can I find the course syllabus and academic calendar?",
+    "answer": "The syllabus and academic calendar are available on the department page and in the student ERP dashboard."
+  },
+  {
+    "intent": "General",
+    "question": "What are the helpdesk working hours?",
+    "answer": "The physical helpdesk is available from 9:00 AM to 5:00 PM on working days. The chatbot is available 24/7."
+  }
+]

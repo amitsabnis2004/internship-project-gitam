@@ -1,0 +1,470 @@
+AI Chatbot Web Portal for Student Helpdesk Using
+Natural Language Processing
+Amit A. Sabnis, Sai Anudra Togati
+2023002731, 2023008229
+Department of Computer Science and Engineering
+GITAM University, Bengaluru, India
+Email: asabnis2@gitam.in, stogati@gitam.in
+Abstract—The rapid digital transformation of higher education
+institutions has intensified the need for intelligent, scalable,
+and automated student support systems. Traditional helpdesk
+services primarily depend on manual communication methods
+such as emails, telephone calls, and physical visits, often resulting
+in delayed responses, repetitive administrative workload, and
+limited service availability. These limitations adversely affect
+both institutional efficiency and student satisfaction. This pa-
+per presents the design and implementation of an AI-powered
+Chatbot Web Portal for Student Helpdesk leveraging Natural
+Language Processing (NLP) techniques to enable automated, real-
+time query resolution.
+The proposed system provides a web-based conversational
+interface through which students can submit queries in nat-
+ural language related to admissions, academic schedules, fee
+payments, attendance records, course information, placements,
+and examination procedures. The NLP framework incorporates
+text preprocessing stages including normalization, tokenization,
+stop-word removal, and lemmatization. Feature extraction is
+performed using Term Frequency–Inverse Document Frequency
+(TF-IDF) vectorization and transformer-based sentence embed-
+dings to capture both lexical and semantic relationships. Query
+matching is achieved using cosine similarity metrics and in-
+tent classification models to retrieve relevant responses from a
+structured knowledge repository. A confidence-based escalation
+mechanism ensures that low-certainty responses are redirected
+to human administrators, thereby maintaining system reliability
+and accuracy.
+The system architecture follows a modular full-stack approach
+comprising a responsive frontend interface, RESTful backend
+services, a relational database for storing FAQs and conversa-
+tional logs, and a dedicated NLP processing layer. An administra-
+tive dashboard facilitates dynamic knowledge base management,
+monitoring of unresolved queries, and generation of analytical re-
+ports. Experimental evaluation demonstrates improved response
+accuracy, reduced response latency, and significant reduction
+in repetitive administrative workload compared to traditional
+helpdesk systems.
+The proposed solution offers a scalable, cost-effective, and
+extensible framework for modernizing institutional student sup-
+port services, with potential future enhancements including
+multilingual capabilities, sentiment analysis, adaptive learning
+mechanisms, and ERP system integration.
+Index Terms—Artificial Intelligence, Natural Language Pro-
+cessing, Chatbot Systems, Information Retrieval, Student Sup-
+port Systems, TF-IDF, Sentence Embeddings
+I. INTRODUCTION
+The rapid advancement of digital technologies has trans-
+formed the operational landscape of higher education insti-
+tutions. Universities and colleges increasingly rely on online
+platforms to manage academic administration, communication,
+and student services. Despite this technological evolution,
+many institutional helpdesk systems continue to function
+through conventional manual mechanisms such as email cor-
+respondence, telephone communication, and in-person visits.
+These approaches often result in delayed responses, repeti-
+tive query handling, limited operational hours, and increased
+administrative burden. As student enrollment numbers grow
+and academic processes become more complex, the need for
+intelligent and automated student support solutions becomes
+increasingly critical.
+Student helpdesks typically receive a large volume of recur-
+ring queries related to admissions, fee payments, examination
+schedules, attendance records, course information, placement
+procedures, and academic regulations. Handling these repeti-
+tive inquiries manually not only consumes significant admin-
+istrative resources but also affects response consistency and
+efficiency. Furthermore, the absence of real-time assistance
+reduces accessibility for students, especially outside working
+hours. This scenario highlights the importance of integrat-
+ing Artificial Intelligence (AI) technologies into institutional
+support systems to enhance responsiveness and operational
+scalability.
+Recent advancements in Natural Language Processing
+(NLP) have enabled the development of conversational agents
+capable of understanding and responding to user queries in
+natural language. Chatbots powered by NLP techniques can
+interpret textual input, extract semantic meaning, and gener-
+ate contextually relevant responses. Modern approaches such
+as Term Frequency–Inverse Document Frequency (TF-IDF),
+cosine similarity, and transformer-based sentence embeddings
+allow systems to capture both syntactic and semantic relation-
+ships within text data. These techniques make it feasible to
+design automated helpdesk solutions that simulate human-like
+interaction while maintaining high efficiency and accuracy.
+This paper presents the design and implementation of an
+AI-driven Chatbot Web Portal for Student Helpdesk that
+
+leverages NLP techniques to provide automated, real-time
+query resolution. The proposed system integrates a web-based
+conversational interface with a backend NLP engine capable
+of processing and classifying student queries. The architecture
+follows a modular full-stack design, incorporating a responsive
+frontend, RESTful backend services, a relational database for
+storing FAQs and conversational logs, and an administrative
+dashboard for knowledge base management and analytics.
+The primary contributions of this work are as follows:
+•Development of an NLP-based chatbot capable of han-
+dling diverse institutional queries with semantic under-
+standing.
+•Integration of similarity-based information retrieval and
+intent classification mechanisms to improve response
+accuracy.
+•Implementation of a confidence-based escalation strategy
+to maintain system reliability.
+•Design of an administrative analytics module for monitor-
+ing performance and optimizing knowledge management.
+II. EXISTINGSYSTEM ANDITSLIMITATIONS
+The current student helpdesk systems in most educational
+institutions rely on traditional and manual communication
+mechanisms. Although functional, these systems exhibit sev-
+eral operational and scalability limitations. The major issues
+associated with the existing system are summarized as follows:
+A. Existing System Characteristics
+•Manual communication through emails, telephone calls,
+and physical helpdesk counters.
+•Static FAQ pages with predefined question–answer pairs.
+•Human-dependent query handling process.
+•Limited operational hours restricted to institutional work-
+ing time.
+•Lack of intelligent query interpretation or semantic un-
+derstanding.
+B. Limitations of the Existing System
+•Delayed Response Time:Manual processing leads to
+slow response during peak academic periods such as
+admissions, fee deadlines, and examinations.
+•Repetitive Administrative Workload:Staff members
+repeatedly handle similar queries, resulting in inefficient
+use of human resources.
+•Limited Accessibility:Helpdesk services are unavailable
+outside official working hours.
+•Lack of Semantic Understanding:Static FAQ systems
+cannot interpret differently phrased queries or variations
+in natural language.
+•Poor Scalability:As student enrollment increases, the
+volume of queries grows proportionally, overwhelming
+administrative staff.
+•Inconsistent Information Delivery:Human-dependent
+responses may vary, leading to inconsistency in commu-
+nication.
+•Absence of Real-Time Analytics:Existing systems lack
+structured logging and analytical tools to monitor query
+trends and performance metrics.
+•Inefficient Record Management:Query records are
+often scattered across email threads or unstructured doc-
+umentation.
+•Higher Operational Costs:Continuous human involve-
+ment increases administrative expenditure.
+The above limitations demonstrate the necessity for an
+intelligent, automated, and scalable student helpdesk system
+capable of providing real-time assistance while minimizing
+administrative dependency.
+C. Objectives
+The primary objectives of this project are as follows:
+•To design and develop a web-based AI chatbot capable
+of handling institutional student queries in real time.
+•To implement NLP techniques for accurate interpretation
+and semantic understanding of user queries.
+•To integrate similarity-based information retrieval and
+intent classification mechanisms for improved response
+accuracy.
+•To reduce administrative workload by automating repet-
+itive helpdesk operations.
+•To provide 24/7 accessibility for students through an
+interactive conversational interface.
+•To develop an administrative dashboard for knowledge
+base management and analytical reporting.
+D. Proposed Solution
+To address the identified challenges, this paper proposes an
+AI-driven Chatbot Web Portal for Student Helpdesk built on
+a modular full-stack architecture. The key components of the
+proposed solution include:
+•A responsive web-based frontend interface that enables
+natural language interaction between students and the
+chatbot.
+•A backend RESTful API layer responsible for request
+handling, authentication, and system integration.
+•An NLP processing module that performs text prepro-
+cessing, feature extraction (TF-IDF and sentence embed-
+dings), and query matching using cosine similarity and
+intent classification.
+•A relational database system for storing Frequently Asked
+Questions (FAQs), user interactions, and conversation
+logs.
+•A confidence-based escalation mechanism that redirects
+low-certainty responses to human administrators.
+•An administrative dashboard for dynamic knowledge base
+updates, monitoring unresolved queries, and generating
+usage analytics.
+The proposed architecture ensures scalability, reliability, low
+response latency, and extensibility for future enhancements
+such as multilingual support, sentiment analysis, adaptive
+learning models, and integration with institutional ERP sys-
+tems.
+
+III. PROPOSEDNLP FRAMEWORK ANDALGORITHMIC
+DESIGN
+This section presents the Natural Language Processing
+(NLP) algorithms employed in the proposed chatbot system
+and introduces an enhanced semantic retrieval framework
+designed to improve response accuracy, scalability, and ro-
+bustness.
+A. Selection of NLP Algorithms
+The student helpdesk chatbot primarily performs semantic
+query understanding and information retrieval. Several NLP
+approaches were evaluated for suitability:
+•TF-IDF with Cosine Similarity:A lightweight vector-
+space model for lexical matching. Although computation-
+ally efficient, it lacks deep semantic understanding.
+•Na ¨ıve Bayes / Logistic Regression:Supervised classi-
+fication models useful for intent detection but dependent
+on labeled datasets.
+•Word Embeddings (Word2Vec, GloVe):Capture word-
+level semantics but insufficient for full sentence represen-
+tation.
+•Transformer-Based Sentence Embeddings (Sentence-
+BERT):Provide contextual and semantic sentence-level
+representations, enabling robust similarity comparison.
+Among these, Sentence-BERT (SBERT) was selected as
+the core semantic representation model due to its superior
+performance in sentence similarity and paraphrase detection
+tasks.
+B. Enhanced Semantic Retrieval with Intent Filtering (ESRIF)
+To improve upon traditional semantic similarity approaches,
+this work proposes an Enhanced Semantic Retrieval with
+Intent Filtering (ESRIF) framework. The model combines
+transformer-based embeddings with intent classification, hy-
+brid similarity scoring, and confidence-based escalation.
+1) System Workflow:The ESRIF framework consists of the
+following stages:
+1)Text Preprocessing:Lowercasing, punctuation removal,
+tokenization, and lemmatization.
+2)Intent Classification:A lightweight classifier catego-
+rizes the query into predefined domains such as Admis-
+sions, Fees, Examinations, Attendance, Placements, and
+General queries.
+3)Intent-Based Filtering:Only FAQs belonging to the
+predicted intent category are considered, reducing search
+space and improving precision.
+4)Sentence Embedding Generation:The query and can-
+didate FAQs are encoded using Sentence-BERT to gen-
+erate dense vector representations.
+5)Hybrid Similarity Scoring:A weighted scoring mecha-
+nism combines semantic similarity and keyword overlap.
+6)Confidence-Based Escalation:Queries with similarity
+scores below a predefined threshold are escalated to
+human administrators.
+2) Mathematical Formulation:LetE Q denote the embed-
+ding of the user query andE F denote the embedding of a
+candidate FAQ.
+Cosine similarity is computed as:
+Sim(Q, F) = EQ ·E F
+||EQ|| ||EF || (1)
+To enhance retrieval accuracy, a hybrid scoring mechanism
+is introduced:
+Score=α·Sim(Q, F) +β·Overlap(Q, F)(2)
+where:
+•Sim(Q, F)is the cosine similarity score,
+•Overlap(Q, F)represents keyword overlap ratio,
+•αandβare weighting factors such thatα+β= 1.
+Empirically,α= 0.8andβ= 0.2were selected to prioritize
+semantic similarity while retaining keyword reinforcement.
+If:
+Score < τ(3)
+whereτis a confidence threshold (e.g., 0.65), the query is
+escalated to the administrator.
+3) Algorithm Implementation:The proposed ESRIF algo-
+rithm is summarized below:
+1) Input user queryQ
+2) PreprocessQ
+3) Predict intent categoryI
+4) Retrieve FAQ subsetF I corresponding to intentI
+5) Generate embeddingE Q
+6) For each FAQF∈F I:
+•Compute embeddingE F
+•Calculate cosine similarity
+•Compute keyword overlap score
+•Calculate final weighted score
+7) Select FAQ with maximum score
+8) If score< τ, escalate query
+9) Else return corresponding answer
+C. Enhancements Over Traditional Approaches
+The proposed ESRIF framework offers several improve-
+ments over conventional similarity-based chatbots:
+•Reduces computational complexity through intent-based
+filtering.
+•Improves semantic accuracy using transformer embed-
+dings.
+•Enhances robustness via hybrid similarity scoring.
+•Ensures reliability through confidence-based escalation.
+•Enables adaptive improvement through user feedback
+logging.
+This integrated architecture significantly improves response
+precision and scalability compared to traditional TF-IDF-only
+systems.
+
+IV. IMPLEMENTATION ANDEXPERIMENTALSETUP
+This section describes the practical implementation of the
+proposed Enhanced Semantic Retrieval with Intent Filtering
+(ESRIF) framework and the experimental environment used
+to evaluate system performance.
+A. System Implementation
+The chatbot system was implemented using a modular full-
+stack architecture consisting of frontend, backend, database,
+and NLP processing components.
+1) Frontend Layer:The user interface was developed using
+a responsive web framework to enable real-time interaction
+between students and the chatbot. The interface allows users
+to:
+•Submit natural language queries,
+•View chatbot responses,
+•Provide feedback on response accuracy,
+•Access conversation history.
+2) Backend Layer:The backend was implemented using a
+RESTful API architecture. The backend handles:
+•Request processing and routing,
+•User authentication,
+•NLP module integration,
+•Database interaction,
+•Query logging and analytics.
+3) Database Design:A relational database was used to
+store structured data, including:
+•Frequently Asked Questions (FAQs),
+•Intent categories,
+•Precomputed sentence embeddings,
+•Conversation logs,
+•Feedback records.
+Precomputing FAQ embeddings significantly reduces run-
+time latency during similarity comparison.
+4) NLP Module:The NLP module integrates:
+•Text preprocessing (tokenization, stop-word removal,
+lemmatization),
+•Intent classification using supervised learning,
+•Sentence embedding generation using Sentence-BERT,
+•Cosine similarity computation,
+•Hybrid similarity scoring mechanism,
+•Confidence-based escalation logic.
+The Sentence-BERT model (all-MiniLM-L6-v2) was
+used due to its balance between semantic performance and
+computational efficiency.
+B. Experimental Dataset
+To evaluate the system, a dataset of student-related queries
+was constructed. The dataset consisted of:
+•Frequently asked institutional queries categorized into
+multiple domains,
+•Paraphrased variations of each query to simulate real-
+world usage,
+•Synthetic and manually collected student questions.
+The dataset included queries from categories such as Ad-
+missions, Fees, Examinations, Attendance, Placements, and
+General inquiries.
+C. Evaluation Metrics
+System performance was evaluated using the following
+metrics:
+•Accuracy:Proportion of correctly matched responses.
+•Precision:Ratio of relevant responses among retrieved
+results.
+•Recall:Ratio of relevant responses successfully retrieved.
+•F1-Score:Harmonic mean of precision and recall.
+•Response Latency:Average time taken to generate a
+response.
+D. Experimental Setup
+Experiments were conducted under the following environ-
+ment:
+•Processor: Multi-core CPU architecture,
+•Memory: 8–16 GB RAM,
+•Operating System: Linux/Windows environment,
+•Programming Language: Python,
+•NLP Libraries: Sentence-Transformers, Scikit-learn,
+•Backend Framework: REST API-based architecture,
+•Database: Relational SQL database.
+FAQ embeddings were precomputed and stored to minimize
+runtime computation overhead. During evaluation, incoming
+queries were encoded dynamically and compared against fil-
+tered candidate FAQs.
+E. Baseline Comparison
+To validate the effectiveness of the proposed ESRIF frame-
+work, performance was compared against:
+•TF-IDF with Cosine Similarity (baseline model),
+•Sentence-BERT with plain cosine similarity (without
+hybrid scoring),
+•Proposed ESRIF hybrid model.
+Comparative analysis demonstrates that the proposed hybrid
+scoring mechanism with intent filtering improves semantic
+accuracy while reducing computational search space.
+F . Algorithm Implementation
+The Enhanced Semantic Retrieval with Intent Filtering
+(ESRIF) framework was implemented using Python. The
+implementation integrates Sentence-BERT embeddings, intent
+filtering, hybrid similarity scoring, and confidence-based esca-
+lation.
+from sentence_transformers import
+SentenceTransformer
+from sklearn.metrics.pairwise import
+cosine_similarity
+import numpy as np
+import re
+# Load SBERT model
+model = SentenceTransformer(’all-MiniLM-L6-v2’)
+# Hyperparameters
+
+ALPHA = 0.8
+BETA = 0.2
+THRESHOLD = 0.65
+# Sample FAQ structure
+faqs = [
+{"question": "When is the exam timetable
+released?",
+"answer": "The exam timetable is released two
+weeks before exams.",
+"intent": "Exams"},
+{"question": "How can I pay my semester fees?",
+"answer": "Fees can be paid through the student
+portal.",
+"intent": "Fees"}
+]
+# Precompute FAQ embeddings
+for faq in faqs:
+faq["embedding"] = model.encode(faq["question"])
+def preprocess(text):
+text = text.lower()
+text = re.sub(r’[ˆa-zA-Z0-9\s]’, ’’, text)
+return text
+def keyword_overlap(query, faq_question):
+query_words = set(query.split())
+faq_words = set(faq_question.lower().split())
+overlap = query_words.intersection(faq_words)
+return len(overlap) / max(len(query_words), 1)
+def classify_intent(query):
+# Simple rule-based intent classifier (can be
+replaced with ML model)
+if "exam" in query:
+return "Exams"
+elif "fee" in query:
+return "Fees"
+else:
+return "General"
+def chatbot_response(query):
+query = preprocess(query)
+intent = classify_intent(query)
+# Intent-based filtering
+candidate_faqs = [faq for faq in faqs if faq["
+intent"] == intent]
+if not candidate_faqs:
+return "Query forwarded to administration."
+query_embedding = model.encode(query)
+best_score = 0
+best_answer = None
+for faq in candidate_faqs:
+cosine_score = cosine_similarity(
+[query_embedding], [faq["embedding"]]
+)[0][0]
+keyword_score = keyword_overlap(query, faq["
+question"])
+final_score = ALPHA * cosine_score + BETA *
+keyword_score
+if final_score > best_score:
+best_score = final_score
+best_answer = faq["answer"]
+if best_score < THRESHOLD:
+return "Your query has been escalated to the
+administration."
+return best_answer
