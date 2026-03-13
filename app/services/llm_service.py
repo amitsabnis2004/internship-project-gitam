@@ -11,6 +11,21 @@ from app.config import (
 )
 
 INSUFFICIENT_CONTEXT_TOKEN = "__INSUFFICIENT_CONTEXT__"
+NO_ANSWER_TOKEN = "__NO_ANSWER__"
+
+
+def _response_style_instruction(user_query: str) -> str:
+    query = user_query.lower()
+    concise_signals = ["when", "date", "time", "deadline", "last date", "start", "end"]
+    if any(token in query for token in concise_signals):
+        return (
+            "Provide 2-4 sentences. Start with the direct answer, then add related timeline detail "
+            "or caveat if present in context."
+        )
+    return (
+        "Provide 4-7 sentences with clear details from context. "
+        "If useful, format with short bullet points."
+    )
 
 
 def _build_context_block(chunks: list[dict[str, Any]]) -> str:
@@ -31,11 +46,16 @@ def generate_grounded_answer(
         return {"used_llm": False, "answer": "", "reason": "missing_api_key_or_context"}
 
     context_block = _build_context_block(context_chunks)
+    style_instruction = _response_style_instruction(user_query)
     system_prompt = (
         "You are an academic helpdesk assistant. "
         "Answer ONLY using the provided context snippets from uploaded PDFs. "
-        f"If the answer is not present in the context, output exactly {INSUFFICIENT_CONTEXT_TOKEN}. "
-        "Keep answers concise and factual. Do not invent dates, policies, or links."
+        f"If the answer is not present in the context, output exactly {NO_ANSWER_TOKEN}. "
+        "Do not invent dates, policies, or links. "
+        "If there are conflicting dates, mention the conflict and request verification from the Student Helpdesk office. "
+        "Do not mention words such as context, source, snippet, token, retrieval, or model in the final answer. "
+        "Write in a formal student-helpdesk tone. "
+        f"{style_instruction}"
     )
 
     user_prompt = (
@@ -57,6 +77,7 @@ def generate_grounded_answer(
             {"role": "user", "content": user_prompt},
         ],
         "temperature": 0.2,
+        "max_tokens": 420,
     }
 
     try:
@@ -76,7 +97,13 @@ def generate_grounded_answer(
     if not answer:
         return {"used_llm": False, "answer": "", "reason": "empty_answer"}
 
-    if answer == INSUFFICIENT_CONTEXT_TOKEN:
+    answer_upper = answer.upper()
+    blocked_markers = [
+        INSUFFICIENT_CONTEXT_TOKEN,
+        NO_ANSWER_TOKEN,
+        "INSUFFICIENT_CONTEXT",
+    ]
+    if any(marker in answer_upper for marker in blocked_markers):
         return {"used_llm": False, "answer": "", "reason": "insufficient_context"}
 
     return {"used_llm": True, "answer": answer, "reason": "ok"}

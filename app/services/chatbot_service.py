@@ -1,4 +1,5 @@
 import json
+import re
 from typing import List
 
 from sqlalchemy.orm import Session
@@ -10,6 +11,56 @@ from app.services.llm_service import generate_grounded_answer
 from app.services.nlp_engine import ESRIFEngine, FAQDoc
 
 engine = ESRIFEngine()
+
+
+def _formal_helpdesk_fallback(detected_intent: str) -> str:
+    return (
+        "Thank you for your query. At the moment, we do not have a verified update for this request "
+        "in the current helpdesk knowledge base. Please contact the Student Helpdesk office for the "
+        "latest confirmed details. "
+        f"(Category: {detected_intent})"
+    )
+
+
+def _sanitize_student_answer(answer: str, detected_intent: str) -> str:
+    text = (answer or "").strip()
+    if not text:
+        return _formal_helpdesk_fallback(detected_intent)
+
+    upper = text.upper()
+    blocked_literals = [
+        "__INSUFFICIENT_CONTEXT__",
+        "__NO_ANSWER__",
+        "INSUFFICIENT_CONTEXT",
+    ]
+    blocked_patterns = [
+        r"\binsufficient\s*[_\- ]?\s*context\b",
+        r"\bno\s*[_\- ]?\s*answer\b",
+    ]
+
+    if any(token in upper for token in blocked_literals):
+        return _formal_helpdesk_fallback(detected_intent)
+
+    for pattern in blocked_patterns:
+        if re.search(pattern, text, flags=re.IGNORECASE):
+            return _formal_helpdesk_fallback(detected_intent)
+
+    # Remove internal/retrieval-style wording if it slips through.
+    replacements = [
+        (r"\bin the context\b", "in the current academic records"),
+        (r"\bprovided in the context\b", "currently available in academic records"),
+        (r"\bas per the context\b", "as per current academic records"),
+        (r"\bfrom the context\b", "from current academic records"),
+        (r"\baccording to the context\b", "according to current academic records"),
+    ]
+    for pattern, replacement in replacements:
+        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+
+    # Remove trailing source tags from student-facing answers.
+    text = re.sub(r"\s*Sources:\s*\[[^\]]+\](?:\s*,\s*\[[^\]]+\])*\.?\s*$", "", text, flags=re.IGNORECASE)
+    text = text.strip()
+
+    return text
 
 
 def seed_faqs_if_needed(db: Session) -> None:
@@ -58,16 +109,22 @@ def process_query(db: Session, message: str, user_id: str | None = None) -> Conv
     )
 
     if llm_result["used_llm"]:
-        answer = llm_result["answer"]
+        answer = _sanitize_student_answer(llm_result["answer"], result["detected_intent"])
         confidence = max(
             float(result["confidence"]),
             max((float(c["score"]) for c in context_chunks), default=0.0),
         )
-        escalated = False
+        escalated = answer == _formal_helpdesk_fallback(result["detected_intent"])
     else:
-        answer = result["answer"]
-        confidence = float(result["confidence"])
-        escalated = bool(result["escalated"])
+        faq_answer = (result.get("faq_answer") or "").strip()
+        if faq_answer and not bool(result["escalated"]):
+            answer = _sanitize_student_answer(faq_answer, result["detected_intent"])
+            confidence = float(result["confidence"])
+            escalated = answer == _formal_helpdesk_fallback(result["detected_intent"])
+        else:
+            answer = _formal_helpdesk_fallback(result["detected_intent"])
+            confidence = float(result["confidence"])
+            escalated = True
 
     log = ConversationLog(
         user_id=user_id,

@@ -28,6 +28,7 @@ OPENROUTER_APP_NAME = os.getenv("OPENROUTER_APP_NAME", "Student Helpdesk Chatbot
 PDF_CHUNK_SIZE_WORDS = int(os.getenv("PDF_CHUNK_SIZE_WORDS", "220"))
 PDF_CHUNK_OVERLAP_WORDS = int(os.getenv("PDF_CHUNK_OVERLAP_WORDS", "40"))
 CONTEXT_TOP_K = int(os.getenv("CONTEXT_TOP_K", "4"))
+CONTEXT_ENABLE_SEMANTIC_RETRIEVAL = os.getenv("CONTEXT_ENABLE_SEMANTIC_RETRIEVAL", "false").lower() == "true"
 
 # FastAPI runtime
 APP_TITLE = "AI Student Helpdesk Chatbot"
