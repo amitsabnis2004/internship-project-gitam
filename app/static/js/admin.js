@@ -2,6 +2,11 @@ const analyticsBox = document.getElementById('analyticsBox');
 const faqList = document.getElementById('faqList');
 const unresolvedList = document.getElementById('unresolvedList');
 const faqForm = document.getElementById('faqForm');
+const contextForm = document.getElementById('contextForm');
+const contextPdfInput = document.getElementById('contextPdf');
+const replaceContextInput = document.getElementById('replaceContext');
+const contextStatus = document.getElementById('contextStatus');
+const contextList = document.getElementById('contextList');
 
 async function loadAnalytics() {
   const response = await fetch('/analytics/summary');
@@ -39,6 +44,24 @@ async function loadUnresolved() {
   }
 }
 
+async function loadContextFiles() {
+  const response = await fetch('/chat/context/files');
+  const files = await response.json();
+  contextList.innerHTML = '';
+
+  if (!files.length) {
+    contextList.innerHTML = '<div class="card-item">No PDF context uploaded yet.</div>';
+    return;
+  }
+
+  files.forEach((file) => {
+    const div = document.createElement('div');
+    div.className = 'card-item';
+    div.innerHTML = `<strong>${file.file_name}</strong><br/><small>Chunks: ${file.chunk_count}</small>`;
+    contextList.appendChild(div);
+  });
+}
+
 faqForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
@@ -60,6 +83,39 @@ faqForm.addEventListener('submit', async (event) => {
   await Promise.all([loadFaqs(), loadAnalytics()]);
 });
 
-Promise.all([loadAnalytics(), loadFaqs(), loadUnresolved()]).catch(() => {
+contextForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const file = contextPdfInput.files?.[0];
+  if (!file) {
+    return;
+  }
+
+  const payload = new FormData();
+  payload.append('file', file);
+
+  contextStatus.textContent = 'Uploading and indexing PDF...';
+
+  try {
+    const replaceExisting = replaceContextInput.checked;
+    const response = await fetch(`/chat/context/upload?replace_existing=${replaceExisting}`, {
+      method: 'POST',
+      body: payload,
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.detail || 'Upload failed');
+    }
+
+    contextStatus.textContent = `Uploaded ${result.file_name}. Chunks indexed: ${result.total_chunks}.`;
+    contextForm.reset();
+    await loadContextFiles();
+  } catch (error) {
+    contextStatus.textContent = error.message || 'Failed to upload context PDF';
+  }
+});
+
+Promise.all([loadAnalytics(), loadFaqs(), loadUnresolved(), loadContextFiles()]).catch(() => {
   analyticsBox.textContent = 'Failed to load dashboard data';
 });

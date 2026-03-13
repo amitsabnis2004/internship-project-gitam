@@ -35,6 +35,19 @@
       </article>
 
       <article class="panel">
+        <h2>Upload PDF Context</h2>
+        <form id="contextForm" class="stack-form">
+          <input id="contextPdf" type="file" accept="application/pdf" required />
+          <label>
+            <input id="replaceContext" type="checkbox" /> Replace existing context
+          </label>
+          <button type="submit">Upload PDF</button>
+        </form>
+        <p id="contextStatus" class="status"></p>
+        <div id="contextList" class="list-box"></div>
+      </article>
+
+      <article class="panel">
         <h2>FAQs</h2>
         <div id="faqList" class="list-box"></div>
       </article>

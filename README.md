@@ -8,6 +8,8 @@ This project implements an AI-powered student helpdesk chatbot described in your
 - Confidence-based escalation to admin
 - Admin dashboard for FAQ management and unresolved queries
 - Analytics summary API
+- LLM answer generation through OpenRouter
+- PDF context upload and retrieval grounding for academic calendar and policy documents
 
 ## 1. Tech Stack
 
@@ -65,7 +67,31 @@ uvicorn app.main:app --reload
 - Admin portal: `http://127.0.0.1:8000/admin-portal`
 - API docs: `http://127.0.0.1:8000/docs`
 
-## 4. Core Features Implemented
+## 4. OpenRouter LLM + PDF Context
+
+Set your OpenRouter API key in `.env` (or OS env vars):
+
+```env
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+# Optional
+OPENROUTER_MODEL=openai/gpt-4o-mini
+OPENROUTER_SITE_URL=http://localhost:8000
+OPENROUTER_APP_NAME=Student Helpdesk Chatbot
+```
+
+How it works now:
+
+1. Upload an academic calendar PDF (or any policy PDF) from Admin Dashboard -> "Upload PDF Context".
+2. The system extracts text, chunks it, stores it in DB, and retrieves relevant chunks per query.
+3. Chat answers are generated with OpenRouter using only retrieved PDF context.
+4. If LLM cannot ground an answer in uploaded context, the system falls back to the existing FAQ retrieval/escalation pipeline.
+
+API endpoints added:
+
+- `POST /chat/context/upload` (multipart file upload, optional `replace_existing=true`)
+- `GET /chat/context/files`
+
+## 5. Core Features Implemented
 
 - Query preprocessing: lowercasing, cleanup, normalization
 - Intent classification (domain-based rules)
@@ -102,6 +128,7 @@ uvicorn app.main:app --reload
 2. Verify intent and confidence shown under chat input.
 3. Ask a vague question; observe escalation behavior.
 4. Open admin portal, add a new FAQ, and test the same question again.
+5. Upload your academic calendar PDF and ask date/policy queries to validate LLM grounding.
 
 ## 7. Future Enhancements
 

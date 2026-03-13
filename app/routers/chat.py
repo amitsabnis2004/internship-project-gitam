@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.models import ConversationLog, Feedback
 from app.schemas import FeedbackCreate, FeedbackOut, QueryRequest, QueryResponse
+from app.services.context_service import ingest_pdf_context, list_context_documents
 from app.services.chatbot_service import process_query
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -58,3 +59,35 @@ def submit_feedback(payload: FeedbackCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(feedback)
     return feedback
+
+
+@router.post("/context/upload")
+async def upload_context_pdf(
+    file: UploadFile = File(...),
+    replace_existing: bool = False,
+    db: Session = Depends(get_db),
+):
+    file_name = file.filename or "uploaded_context.pdf"
+    if not file_name.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported")
+
+    file_bytes = await file.read()
+    if not file_bytes:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+
+    try:
+        result = ingest_pdf_context(
+            db=db,
+            file_name=file_name,
+            file_bytes=file_bytes,
+            replace_existing=replace_existing,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return result
+
+
+@router.get("/context/files")
+def get_context_files(db: Session = Depends(get_db)):
+    return list_context_documents(db)

@@ -149,6 +149,7 @@ class ESRIFEngine:
 
         return {
             "answer": answer,
+            "faq_answer": best_faq.answer if best_faq else "",
             "confidence": round(float(best_score), 4),
             "detected_intent": detected_intent,
             "escalated": escalated,

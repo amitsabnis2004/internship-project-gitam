@@ -45,3 +45,27 @@ class Feedback(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     conversation = relationship("ConversationLog", back_populates="feedback")
+
+
+class ContextDocument(Base):
+    __tablename__ = "context_documents"
+
+    id = Column(Integer, primary_key=True, index=True)
+    file_name = Column(String(255), nullable=False)
+    content_hash = Column(String(64), nullable=False, unique=True, index=True)
+    chunk_count = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+    chunks = relationship("ContextChunk", back_populates="document", cascade="all, delete-orphan")
+
+
+class ContextChunk(Base):
+    __tablename__ = "context_chunks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("context_documents.id", ondelete="CASCADE"), nullable=False, index=True)
+    chunk_index = Column(Integer, nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+    document = relationship("ContextDocument", back_populates="chunks")
